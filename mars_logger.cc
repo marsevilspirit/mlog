@@ -1,5 +1,4 @@
 #include "mars_logger.h"
-#include <fstream>
 
 using namespace mars;
 
@@ -33,10 +32,10 @@ void MarsLogger::initLogConfig () {
         return;
     }
 
-    loggerConfig.logSwitch = root["logSwitch"].asString();
-    loggerConfig.logTerminalSwitch = root["logTerminalSwitch"].asString();
+    loggerConfig.logSwitch = root["logSwitch"].asBool();
+    loggerConfig.logTerminalSwitch = root["logTerminalSwitch"].asBool();
     loggerConfig.logTerminalLevel = root["logTerminalLevel"].asString();
-    loggerConfig.logFileSwitch = root["logFileSwitch"].asString();
+    loggerConfig.logFileSwitch = root["logFileSwitch"].asBool();
     loggerConfig.logFileLevel = root["logFileLevel"].asString();
     loggerConfig.logFileName = root["logFileName"].asString();
     loggerConfig.logFilePath = root["logFilePath"].asString();
@@ -59,13 +58,11 @@ void MarsLogger::initLogConfig () {
     bindTerminalOutPutLevelMap("1", TerminalLogLevel::ERROR);
     bindTerminalOutPutLevelMap("0", TerminalLogLevel::FATAL);
 
-    if(loggerConfig.logFileSwitch == "on"){
+    if(loggerConfig.logSwitch && loggerConfig.logFileSwitch){
         if(!createFile(loggerConfig.logFilePath)){
             std::cout<<"Log work path creation failed\n";
         }
     }
-
-    std::cout << "loggerConfig.logSwitch: " << loggerConfig.logSwitch << std::endl;
 
     return;
 }
@@ -109,11 +106,11 @@ bool MarsLogger::createFile (std::string path) {
 }
 
 bool MarsLogger::ifFileOutPut (FileLogLevel file_log_level) {
-    return fileCoutMap[file_log_level];
+    return fileCoutMap[file_log_level] && loggerConfig.logFileSwitch;
 }
 
 bool MarsLogger::ifTerminalOutPut (TerminalLogLevel terminal_log_level) {
-    return terminalCoutMap[terminal_log_level];
+    return terminalCoutMap[terminal_log_level] && loggerConfig.logTerminalSwitch;
 }
 
 //得到log文件名的时间部分
