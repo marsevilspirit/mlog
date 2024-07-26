@@ -2,7 +2,7 @@
     "logSwitch": true,
     "logTerminalSwitch": true,
     "logTerminalLevel": "0,1,2,3,4,5",
-    "logFileSwitch": true, 
+    "logFileSwitch": false, 
     "logFileLevel": "0,1,2,3,4,5",
     "logFileName": "app_log",
     "logFilePath": "/home/mars/code/",

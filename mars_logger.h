@@ -108,16 +108,21 @@ template <typename ...Args>
 void Log_Trace(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
     mars::MarsLogger* logger = mars::MarsLogger::getInstance();
 
+    if (!logger->LoggerStart())
+    {
+        return;
+    }
+
     bool Terminal, File;
 
     Terminal = logger->ifTerminalOutPut(mars::TerminalLogLevel::TRACE);
     File = logger->ifFileOutPut(mars::FileLogLevel::TRACE);
 
-    if (!Terminal || !File) {
+    if (!Terminal && !File) {
         return;
     }
 
-    std::string log = logger->LogHead(mars::LogLevel::INFO, file_name, func_name, line_no);
+    std::string log = logger->LogHead(mars::LogLevel::TRACE, file_name, func_name, line_no);
 
     log = log + fmt::format(fmt, args...);
 
@@ -136,17 +141,21 @@ template <typename ...Args>
 void Log_Debug(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
     mars::MarsLogger* logger = mars::MarsLogger::getInstance();
 
+    if (!logger->LoggerStart())
+    {
+        return;
+    }
 
     bool Terminal, File;
 
     Terminal = logger->ifTerminalOutPut(mars::TerminalLogLevel::DEBUG);
     File = logger->ifFileOutPut(mars::FileLogLevel::DEBUG);
 
-    if (!Terminal || !File) {
+    if (!Terminal && !File) {
         return;
     }
 
-    std::string log = logger->LogHead(mars::LogLevel::INFO, file_name, func_name, line_no);
+    std::string log = logger->LogHead(mars::LogLevel::DEBUG, file_name, func_name, line_no);
 
     log = log + fmt::format(fmt, args...);
 
@@ -202,16 +211,21 @@ template <typename ...Args>
 void Log_Warn(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
     mars::MarsLogger* logger = mars::MarsLogger::getInstance();
 
+    if (!logger->LoggerStart())
+    {
+        return;
+    }
+
     bool Terminal, File;
 
     Terminal = logger->ifTerminalOutPut(mars::TerminalLogLevel::WARN);
     File = logger->ifFileOutPut(mars::FileLogLevel::WARN);
 
-    if (!Terminal || !File) {
+    if (!Terminal && !File) {
         return;
     }
 
-    std::string log = logger->LogHead(mars::LogLevel::INFO, file_name, func_name, line_no);
+    std::string log = logger->LogHead(mars::LogLevel::WARN, file_name, func_name, line_no);
 
     log = log + fmt::format(fmt, args...);
 
@@ -230,16 +244,21 @@ template <typename ...Args>
 void Log_Error(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
     mars::MarsLogger* logger = mars::MarsLogger::getInstance();
 
+    if (!logger->LoggerStart())
+    {
+        return;
+    }
+
     bool Terminal, File;
 
     Terminal = logger->ifTerminalOutPut(mars::TerminalLogLevel::ERROR);
     File = logger->ifFileOutPut(mars::FileLogLevel::ERROR);
 
-    if (!Terminal || !File) {
+    if (!Terminal && !File) {
         return;
     }
 
-    std::string log = logger->LogHead(mars::LogLevel::INFO, file_name, func_name, line_no);
+    std::string log = logger->LogHead(mars::LogLevel::ERROR, file_name, func_name, line_no);
 
     log = log + fmt::format(fmt, args...);
 
@@ -258,16 +277,21 @@ template <typename ...Args>
 void Log_Fatal(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
     mars::MarsLogger* logger = mars::MarsLogger::getInstance();
 
+    if (!logger->LoggerStart())
+    {
+        return;
+    }
+
     bool Terminal, File;
 
     Terminal = logger->ifTerminalOutPut(mars::TerminalLogLevel::FATAL);
     File = logger->ifFileOutPut(mars::FileLogLevel::FATAL);
 
-    if (!Terminal || !File) {
+    if (!Terminal && !File) {
         return;
     }
 
-    std::string log = logger->LogHead(mars::LogLevel::INFO, file_name, func_name, line_no);
+    std::string log = logger->LogHead(mars::LogLevel::FATAL, file_name, func_name, line_no);
 
     log = log + fmt::format(fmt, args...);
 

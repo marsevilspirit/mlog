@@ -1,4 +1,3 @@
-#include <json/json.h>
 #include "mars_logger.h"
 
 int main()
