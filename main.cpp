@@ -1,19 +1,24 @@
-#include <iostream>
-#include <fstream>
 #include <json/json.h>
 #include "mars_logger.h"
 
 int main()
 {
-    std::ifstream input("./logconf.json");
-    Json::Reader reader;
-    Json::Value root;
-    if (!reader.parse(input, root, false)) {
-        std::cerr << "parse log config file failed" << std::endl;
-        return 0;
-    }
-
     mars::MarsLogger* logger = mars::MarsLogger::getInstance();
 
-    LogInfo("dfsadfsadf %d", 123);
+    time_t begin, end;
+    double ret;
+    begin = clock();
+    std::string name = "mars";
+    for(int i = 0; i< 10000; i++){
+        mars::LogError("我是{} {}", name, i);
+        mars::LogWarn("我是{}", name);
+        mars::LogInfo("我是{}", name);
+        mars::LogDebug("我是{}", name);
+        mars::LogTrace("我是{}", name);
+    }
+    end = clock();
+    ret = double(end-begin) / CLOCKS_PER_SEC;
+    std::cout <<"runtime:   "<<ret<<std::endl;
+    
+    return 0;
 }

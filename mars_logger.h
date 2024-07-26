@@ -7,6 +7,7 @@
 #include <fstream>
 #include <mutex>
 #include <filesystem>
+#include <fmt/core.h>
 
 #define LOG_CONFIG_PATH "./logconf.json"
 
@@ -98,7 +99,6 @@ private:
     ~MarsLogger();
 };
 
-}
 
 template <typename ...Args>
 void LogTrace(const char* fmt, Args... args) {
@@ -113,17 +113,16 @@ void LogTrace(const char* fmt, Args... args) {
         return;
     }
 
-    char buf[1024];
-    snprintf(buf, sizeof(buf), fmt, args...);
+    std::string log = logger->LogHead(mars::LogLevel::INFO, __FILE__, __func__, __LINE__);
 
-    std::string log = logger->LogHead(mars::LogLevel::TRACE, __FILE__, __func__, __LINE__) + buf;
+    log = log + fmt::format(fmt, args...);
 
     if (Terminal) {
-        std::cout << log << std::endl; 
+        std::cout << log << '\n'; 
     }
 
     if (File) {
-        logger->getFile() << log << std::endl;
+        logger->getFile() << log << '\n';
     }
 
     return;
@@ -142,17 +141,16 @@ void LogDebug(const char* fmt, Args... args) {
         return;
     }
 
-    char buf[1024];
-    snprintf(buf, sizeof(buf), fmt, args...);
+    std::string log = logger->LogHead(mars::LogLevel::INFO, __FILE__, __func__, __LINE__);
 
-    std::string log = logger->LogHead(mars::LogLevel::DEBUG, __FILE__, __func__, __LINE__) + buf;
+    log = log + fmt::format(fmt, args...);
 
     if (Terminal) {
-        std::cout << log << std::endl; 
+        std::cout << log << '\n'; 
     }
 
     if (File) {
-        logger->getFile() << log << std::endl;
+        logger->getFile() << log << '\n';
     }
 
     return;
@@ -173,17 +171,21 @@ void LogInfo(const char* fmt, Args... args) {
         return;
     }
 
-    char buf[1024];
-    snprintf(buf, sizeof(buf), fmt, args...);
+    //char buf[1024];
+    //snprintf(buf, sizeof(buf), fmt, args...);
 
-    std::string log = logger->LogHead(mars::LogLevel::INFO, __FILE__, __func__, __LINE__) + buf;
+    //std::string log = logger->LogHead(mars::LogLevel::INFO, __FILE__, __func__, __LINE__) + buf;
+
+    std::string log = logger->LogHead(mars::LogLevel::INFO, __FILE__, __func__, __LINE__);
+
+    log = log + fmt::format(fmt, args...);
 
     if (Terminal) {
-        std::cout << log << std::endl; 
+        std::cout << log << '\n'; 
     }
 
     if (File) {
-        logger->getFile() << log << std::endl;
+        logger->getFile() << log << '\n';
     }
 
     return;
@@ -202,17 +204,16 @@ void LogWarn(const char* fmt, Args... args) {
         return;
     }
 
-    char buf[1024];
-    snprintf(buf, sizeof(buf), fmt, args...);
+    std::string log = logger->LogHead(mars::LogLevel::INFO, __FILE__, __func__, __LINE__);
 
-    std::string log = logger->LogHead(mars::LogLevel::WARN, __FILE__, __func__, __LINE__) + buf;
+    log = log + fmt::format(fmt, args...);
 
     if (Terminal) {
-        std::cout << log << std::endl; 
+        std::cout << log << '\n'; 
     }
 
     if (File) {
-        logger->getFile() << log << std::endl;
+        logger->getFile() << log << '\n';
     }
 
     return;
@@ -231,17 +232,16 @@ void LogError(const char* fmt, Args... args) {
         return;
     }
 
-    char buf[1024];
-    snprintf(buf, sizeof(buf), fmt, args...);
+    std::string log = logger->LogHead(mars::LogLevel::INFO, __FILE__, __func__, __LINE__);
 
-    std::string log = logger->LogHead(mars::LogLevel::ERROR, __FILE__, __func__, __LINE__) + buf;
+    log = log + fmt::format(fmt, args...);
 
     if (Terminal) {
-        std::cout << log << std::endl; 
+        std::cout << log << '\n'; 
     }
 
     if (File) {
-        logger->getFile() << log << std::endl;
+        logger->getFile() << log << '\n';
     }
 
     return;
@@ -260,20 +260,20 @@ void LogFatal(const char* fmt, Args... args) {
         return;
     }
 
-    char buf[1024];
-    snprintf(buf, sizeof(buf), fmt, args...);
+    std::string log = logger->LogHead(mars::LogLevel::INFO, __FILE__, __func__, __LINE__);
 
-    std::string log = logger->LogHead(mars::LogLevel::FATAL, __FILE__, __func__, __LINE__) + buf;
+    log = log + fmt::format(fmt, args...);
 
     if (Terminal) {
-        std::cout << log << std::endl; 
+        std::cout << log << '\n'; 
     }
 
     if (File) {
-        logger->getFile() << log << std::endl;
+        logger->getFile() << log << '\n';
     }
 
     return;
 }
 
+}
 #endif

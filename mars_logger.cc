@@ -73,7 +73,7 @@ void MarsLogger::initLogConfig () {
 std::string MarsLogger::LogHead(LogLevel lvl, const char *file_name, const char *func_name, int line_no) {
     std::string logLevelStr = getLogLevelStr(lvl);
     std::string logTime = getLogOutPutTime();
-    std::string res = "[" + logTime + "]" + " " + logLevelStr + " " + file_name + " " + func_name + ":" + std::to_string(line_no) + " ";
+    std::string res = "[" + logTime + " " + file_name + " " + func_name + ":" + std::to_string(line_no) + "]" + " " + logLevelStr + " ";
     return res;
 }
 
