@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <json/json.h>
+#include "mars_logger.h"
 
 int main()
 {
@@ -12,13 +13,7 @@ int main()
         return 0;
     }
 
-    std::cout << root["logSwitch"].asBool() << '\n';
-    std::cout << root["logFileSwitch"].asBool() << '\n';
-    std::cout << root["logTerminalSwitch"].asBool() << '\n';
-    std::cout << root["logTerminalLevel"].asString() << '\n';
-    std::cout << root["logFileLevel"].asString() << '\n';
-    std::cout << root["logFileName"].asString() << '\n';
-    std::cout << root["logFilePath"].asString() << '\n';
-    std::cout << root["logFileMaxSize"].asString() << '\n';
-    std::cout << root["logFileReachMaxBehavior"].asString() << '\n'; 
+    mars::MarsLogger* logger = mars::MarsLogger::getInstance();
+
+    LogInfo("dfsadfsadf %d", 123);
 }

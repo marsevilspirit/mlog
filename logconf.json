@@ -2,10 +2,10 @@
     "logSwitch": "on",
     "logTerminalSwitch": "on",
     "logTerminalLevel": "0,1,2,3,4,5",
-    "logFileSwitch": "on", 
+    "logFileSwitch": "off", 
     "logFileLevel": "0,1,2,3,4,5",
     "logFileName": "app_log",
-    "logFilePath": "/home/mars/code/cpp_log",
+    "logFilePath": "/home/mars/code/",
     "logFileMaxSize": "100",
     "logFileReachMaxBehavior": "nothing"
 }

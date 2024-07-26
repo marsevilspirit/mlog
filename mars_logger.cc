@@ -1,5 +1,5 @@
 #include "mars_logger.h"
-#include <filesystem>
+#include <fstream>
 
 using namespace mars;
 
@@ -16,6 +16,14 @@ MarsLogger* MarsLogger::getInstance () {
     return single_instance;
 }
 
+MarsLogger::MarsLogger () {
+    initLogConfig();
+}
+
+MarsLogger::~MarsLogger () {
+    file.close();
+}
+
 void MarsLogger::initLogConfig () {
     std::ifstream input(LOG_CONFIG_PATH);
     Json::Reader reader;
@@ -25,18 +33,17 @@ void MarsLogger::initLogConfig () {
         return;
     }
 
-    LoggerConfig logConfig;
-    logConfig.logSwitch = root["logSwitch"].asString();
-    logConfig.logTerminalSwitch = root["logTerminalSwitch"].asString();
-    logConfig.logTerminalLevel = root["logTerminalLevel"].asString();
-    logConfig.logFileSwitch = root["logFileSwitch"].asString();
-    logConfig.logFileLevel = root["logFileLevel"].asString();
-    logConfig.logFileName = root["logFileName"].asString();
-    logConfig.logFilePath = root["logFilePath"].asString();
-    logConfig.logFileMaxSize = root["logFileMaxSize"].asString();
-    logConfig.logFileReachMaxBehavior = root["logFileReachMaxBehavior"].asString(); 
+    loggerConfig.logSwitch = root["logSwitch"].asString();
+    loggerConfig.logTerminalSwitch = root["logTerminalSwitch"].asString();
+    loggerConfig.logTerminalLevel = root["logTerminalLevel"].asString();
+    loggerConfig.logFileSwitch = root["logFileSwitch"].asString();
+    loggerConfig.logFileLevel = root["logFileLevel"].asString();
+    loggerConfig.logFileName = root["logFileName"].asString();
+    loggerConfig.logFilePath = root["logFilePath"].asString();
+    loggerConfig.logFileMaxSize = root["logFileMaxSize"].asString();
+    loggerConfig.logFileReachMaxBehavior = root["logFileReachMaxBehavior"].asString(); 
 
-    logConfig.logFileName = logConfig.logFileName + getLogFileNameTime() + ".log";
+    loggerConfig.logFileName = loggerConfig.logFileName + getLogFileNameTime() + ".log";
 
     bindFileOutPutLevelMap("5", FileLogLevel::TRACE);
     bindFileOutPutLevelMap("4", FileLogLevel::DEBUG);
@@ -58,13 +65,22 @@ void MarsLogger::initLogConfig () {
         }
     }
 
+    std::cout << "loggerConfig.logSwitch: " << loggerConfig.logSwitch << std::endl;
+
     return;
 }
 
-bool createFile (std::string path) {
+std::string MarsLogger::LogHead(LogLevel lvl, const char *file_name, const char *func_name, int line_no) {
+    std::string logLevelStr = getLogLevelStr(lvl);
+    std::string logTime = getLogOutPutTime();
+    std::string res = "[" + logTime + "]" + " " + logLevelStr + " " + file_name + " " + func_name + ":" + std::to_string(line_no) + " ";
+    return res;
+}
+
+bool MarsLogger::createFile (std::string path) {
     namespace fs = std::filesystem;    
     try {
-        if (fs::exists(path)) {
+        if (fs::exists(loggerConfig.logFileName)) {
             std::cerr << "File already exists: " << path << std::endl;
             return false;
         }
@@ -79,13 +95,12 @@ bool createFile (std::string path) {
             }
         }
         
-        std::ofstream file(path);
+        file = std::ofstream(loggerConfig.logFileName);
         if (!file) {
             std::cerr << "Failed to create file: " << path << std::endl;
             return false;
         }        
 
-        file.close();
         return true;
     } catch (const std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
@@ -93,11 +108,26 @@ bool createFile (std::string path) {
     }
 }
 
+bool MarsLogger::ifFileOutPut (FileLogLevel file_log_level) {
+    return fileCoutMap[file_log_level];
+}
+
+bool MarsLogger::ifTerminalOutPut (TerminalLogLevel terminal_log_level) {
+    return terminalCoutMap[terminal_log_level];
+}
+
 //得到log文件名的时间部分
 std::string MarsLogger::getLogFileNameTime() {
     std::time_t time = std::time(nullptr);
     char timeString[std::size("yyyy-mm-dd-hh:mm:ss")];
     strftime(timeString, sizeof(timeString), "%Y-%m-%d-%H:%M:%S",localtime(&time));
+    return timeString;
+}
+
+std::string MarsLogger::getLogOutPutTime() {
+    std::time_t time = std::time(nullptr);
+    char timeString[std::size("yyyy-mm-dd hh:mm:ss")];
+    strftime(timeString, sizeof(timeString), "%Y-%m-%d %H:%M:%S",localtime(&time));
     return timeString;
 }
 
