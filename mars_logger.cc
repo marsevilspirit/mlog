@@ -60,7 +60,7 @@ void MarsLogger::initLogConfig () {
 
     if(loggerConfig.logSwitch && loggerConfig.logFileSwitch){
         if(!createFile(loggerConfig.logFilePath)){
-            std::cout<<"Log work path creation failed\n";
+            std::cout << "Log work path creation failed\n";
         }
     }
 
