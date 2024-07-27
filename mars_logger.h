@@ -95,6 +95,7 @@ private:
     MarsLogger();
     ~MarsLogger();
 
+public:
     template <typename ...Args>
     void Log_Trace(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
         log_impl("TRACE", fmt, file_name, func_name, line_no, args...);
@@ -161,47 +162,14 @@ private:
     }
 };
 
-class LoggerMacros {
-public:
-    template <typename ...Args>
-    static void Log_Trace(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        MarsLogger::getInstance()->Log_Trace(fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    static void Log_Debug(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        MarsLogger::getInstance()->Log_Debug(fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    static void Log_Info(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        MarsLogger::getInstance()->Log_Info(fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    static void Log_Warn(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        MarsLogger::getInstance()->Log_Warn(fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    static void Log_Error(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        MarsLogger::getInstance()->Log_Error(fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    static void Log_Fatal(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        MarsLogger::getInstance()->Log_Fatal(fmt, file_name, func_name, line_no, args...);
-    }
-};
-
 }
 
-#define LogInfo(fmt, ...)   mars::LoggerMacros::Log_Info(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogWarn(fmt, ...)   mars::LoggerMacros::Log_Warn(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogError(fmt, ...)  mars::LoggerMacros::Log_Error(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogFatal(fmt, ...)  mars::LoggerMacros::Log_Fatal(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogDebug(fmt, ...)  mars::LoggerMacros::Log_Debug(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogTrace(fmt, ...)  mars::LoggerMacros::Log_Trace(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogInfo(fmt, ...)   mars::MarsLogger::getInstance()->Log_Info(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->Log_Warn(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogError(fmt, ...)  mars::MarsLogger::getInstance()->Log_Error(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogFatal(fmt, ...)  mars::MarsLogger::getInstance()->Log_Fatal(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogDebug(fmt, ...)  mars::MarsLogger::getInstance()->Log_Debug(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogTrace(fmt, ...)  mars::MarsLogger::getInstance()->Log_Trace(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
 
 
 #endif

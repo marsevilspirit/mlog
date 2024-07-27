@@ -15,6 +15,8 @@ int main()
     end = clock();
     ret = double(end - begin) / CLOCKS_PER_SEC;
     std::cout << "runtime:   " << ret << std::endl;
+
+    mars::LoggerMacros::Log_Error("good", __FILE__, __func__, 1213);
     
     return 0;
 }
