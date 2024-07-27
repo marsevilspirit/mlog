@@ -46,6 +46,8 @@ void MarsLogger::initLogConfig () {
     loggerConfig.logFileLevel      = root["logFileLevel"].asString();
     loggerConfig.logFileName       = root["logFileName"].asString() + getLogFileNameTime() + ".log";
     loggerConfig.logFilePath       = root["logFilePath"].asString();
+    loggerConfig.details           = root["details"].asBool();
+    loggerConfig.time              = root["time"].asBool();
 
     bindFileOutPutLevelMap(loggerConfig.logFileLevel);
     bindTerminalOutPutLevelMap(loggerConfig.logTerminalLevel);
@@ -60,6 +62,18 @@ void MarsLogger::initLogConfig () {
 }
 
 std::string MarsLogger::LogHead (LogLevel lvl, const char *file_name, const char *func_name, int line_no) {
+    if (!loggerConfig.details && !loggerConfig.time) {
+        return fmt::format("{:5} ", getLogLevelStr(lvl));
+    }
+
+    if (!loggerConfig.details) {
+        return fmt::format("[{}] {:5} ", getLogOutPutTime(), getLogLevelStr(lvl));
+    }
+
+    if (!loggerConfig.time) {
+        return fmt::format("[{} {}:{}] {:5} ", file_name, func_name, line_no, getLogLevelStr(lvl));
+    }
+
     return fmt::format("[{} {} {}:{}] {:5} ", getLogOutPutTime(), file_name, func_name, line_no, getLogLevelStr(lvl));
 }
 

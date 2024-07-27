@@ -29,6 +29,8 @@ struct LoggerConfig {
     std::string  logFileLevel;
     std::string  logFileName;
     std::string  logFilePath;
+    bool         details;
+    bool         time;
 };
 
 class MarsLogger {
@@ -74,14 +76,16 @@ public:
         std::string log = LogHead(level, file_name, func_name, line_no);
         log = log + fmt::format(fmt, args...);
 
-        std::lock_guard<std::mutex> lock(log_mutex); // 加锁以确保线程安全
+        {
+            std::lock_guard<std::mutex> lock(log_mutex); // 加锁以确保线程安全
 
-        if (Terminal) {
-            std::cout << log << '\n'; 
-        }
+            if (Terminal) {
+                std::cout << log << '\n'; 
+            }
 
-        if (File) {
-            getFile() << log << '\n';
+            if (File) {
+                getFile() << log << '\n';
+            }
         }
     }
 
@@ -94,9 +98,9 @@ private:
     std::unordered_map<LogLevel, bool> terminalCoutMap;
     std::ofstream file;
     std::unordered_map<LogLevel, std::string> logLevelMap {
-        {LogLevel::FATAL, "FATAL"},
-        {LogLevel::ERROR, "ERROR"},
-        {LogLevel::WARN, "WARN"},
+        {LogLevel::FATAL, RED "FATAL" RESET},
+        {LogLevel::ERROR, RED "ERROR" RESET},
+        {LogLevel::WARN, YELLOW "WARN" RESET},
         {LogLevel::INFO, "INFO"},
         {LogLevel::DEBUG, "DEBUG"},
         {LogLevel::TRACE, "TRACE"}
