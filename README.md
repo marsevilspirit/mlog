@@ -30,7 +30,7 @@ $ yay fmt json
 
 #### 配置文件(命名为`logconf.json`)
 
-```
+```json
 {
     "logSwitch": true,
     "logTerminalSwitch": true,
@@ -56,6 +56,8 @@ g++ test.cpp mars_logger.cc -ljsoncpp -lstdc++fs -o logger.out -lfmt
 
 #### 使用方法
 
+无需任何初始化，直接调用即可(你就说方便不方便)
+
 ```c++
 LogTrace("mlog is the NO.{}!", 10000000);
 LogDebug("mlog is {}!", "best");
@@ -63,6 +65,7 @@ LogInfo("mlog is the NO.{}!", 10000000);
 LogWarn("mlog is the NO.{}!", 10000000);
 LogError("mlog is the NO.{}!", 10000000);
 LogFatal("mlog is the NO.{}!", 10000000);
+LogInfo("mlog is the NO.10000000");
 ```
 
 
@@ -74,9 +77,6 @@ LogFatal("mlog is the NO.{}!", 10000000);
 
 int main()
 {
-    // 初始化日志, 获取单例
-    mars::MarsLogger* logger = mars::MarsLogger::getInstance();
-
     time_t begin, end;
     double ret;
     begin = clock();
@@ -109,12 +109,17 @@ int main()
 #### 目前可能面临的问题
 
 - 在多线程环境下可能线程不安全
+
 - 终端日志不会等待文件日志结束就会终止程序(已发现)
+
 - 无颜色差别，不好分清不同的日志
-- 尚未实现限制文件日志大小
+
+-  尚未实现限制文件日志大小
 
 - 尚未实现文件日志滚动
 
-- 尚未实现多种格式化输入(感觉在本人这段代码里想通过重载<<来输出，是一件不可能的事情)
+- 尚未实现多种格式化输入(感觉在本人这段代码里想通过重载`<<`来输出，是一件不可能的事情)
+
+- 由于我C++高级写法不精，无法想出将类函数隔离的方法，导致可以跳过宏函数直接访问类函数，只好在每个内部函数名前加上`_`下划线，但还是有一定隐患(说实话我想了很久，感觉也是件不可能的事)
 
   

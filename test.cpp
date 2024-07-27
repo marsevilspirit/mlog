@@ -2,9 +2,6 @@
 
 int main()
 {
-    // 初始化日志, 获取单例
-    mars::MarsLogger* logger = mars::MarsLogger::getInstance();
-
     time_t begin, end;
     double ret;
     begin = clock();

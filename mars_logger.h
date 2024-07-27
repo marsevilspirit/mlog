@@ -98,32 +98,32 @@ private:
 public:
     template <typename ...Args>
     void _log_trace(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        log_impl("TRACE", fmt, file_name, func_name, line_no, args...);
+        _log_impl("TRACE", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
     void _log_debug(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        log_impl("DEBUG", fmt, file_name, func_name, line_no, args...);
+        _log_impl("DEBUG", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
     void _log_info(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        log_impl("INFO", fmt, file_name, func_name, line_no, args...);
+        _log_impl("INFO", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
     void _log_warn(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        log_impl("WARN", fmt, file_name, func_name, line_no, args...);
+        _log_impl("WARN", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
     void _log_error(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        log_impl("ERROR", fmt, file_name, func_name, line_no, args...);
+        _log_impl("ERROR", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
     void _log_fatal(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        log_impl("FATAL", fmt, file_name, func_name, line_no, args...);
+        _log_impl("FATAL", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
