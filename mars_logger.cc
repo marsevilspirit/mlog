@@ -37,29 +37,25 @@ void MarsLogger::initLogConfig () {
     loggerConfig.logTerminalLevel = root["logTerminalLevel"].asString();
     loggerConfig.logFileSwitch = root["logFileSwitch"].asBool();
     loggerConfig.logFileLevel = root["logFileLevel"].asString();
-    loggerConfig.logFileName = root["logFileName"].asString();
+    loggerConfig.logFileName = root["logFileName"].asString() + getLogFileNameTime() + ".log";
     loggerConfig.logFilePath = root["logFilePath"].asString();
-    loggerConfig.logFileMaxSize = root["logFileMaxSize"].asString();
-    loggerConfig.logFileReachMaxBehavior = root["logFileReachMaxBehavior"].asString(); 
 
-    loggerConfig.logFileName = loggerConfig.logFileName + getLogFileNameTime() + ".log";
+    bindFileOutPutLevelMap("5", LogLevel::TRACE);
+    bindFileOutPutLevelMap("4", LogLevel::DEBUG);
+    bindFileOutPutLevelMap("3", LogLevel::INFO);
+    bindFileOutPutLevelMap("2", LogLevel::WARN);
+    bindFileOutPutLevelMap("1", LogLevel::ERROR);
+    bindFileOutPutLevelMap("0", LogLevel::FATAL);
 
-    bindFileOutPutLevelMap("5", FileLogLevel::TRACE);
-    bindFileOutPutLevelMap("4", FileLogLevel::DEBUG);
-    bindFileOutPutLevelMap("3", FileLogLevel::INFO);
-    bindFileOutPutLevelMap("2", FileLogLevel::WARN);
-    bindFileOutPutLevelMap("1", FileLogLevel::ERROR);
-    bindFileOutPutLevelMap("0", FileLogLevel::FATAL);
-
-    bindTerminalOutPutLevelMap("5", TerminalLogLevel::TRACE);
-    bindTerminalOutPutLevelMap("4", TerminalLogLevel::DEBUG);
-    bindTerminalOutPutLevelMap("3", TerminalLogLevel::INFO);
-    bindTerminalOutPutLevelMap("2", TerminalLogLevel::WARN);
-    bindTerminalOutPutLevelMap("1", TerminalLogLevel::ERROR);
-    bindTerminalOutPutLevelMap("0", TerminalLogLevel::FATAL);
+    bindTerminalOutPutLevelMap("5", LogLevel::TRACE);
+    bindTerminalOutPutLevelMap("4", LogLevel::DEBUG);
+    bindTerminalOutPutLevelMap("3", LogLevel::INFO);
+    bindTerminalOutPutLevelMap("2", LogLevel::WARN);
+    bindTerminalOutPutLevelMap("1", LogLevel::ERROR);
+    bindTerminalOutPutLevelMap("0", LogLevel::FATAL);
 
     if (loggerConfig.logSwitch && loggerConfig.logFileSwitch) {
-        if(!createFile(loggerConfig.logFilePath)){
+        if (!createFile(loggerConfig.logFilePath)) {
             std::cout << "Log work path creation failed\n";
         }
     }
@@ -67,10 +63,8 @@ void MarsLogger::initLogConfig () {
     return;
 }
 
-std::string MarsLogger::LogHead(LogLevel lvl, const char *file_name, const char *func_name, int line_no) {
-    std::string logLevelStr = getLogLevelStr(lvl);
-    std::string logTime = getLogOutPutTime();
-    return fmt::format("[{} {} {}:{}] {:5} ",logTime, file_name, func_name, line_no, logLevelStr);
+std::string MarsLogger::LogHead (LogLevel lvl, const char *file_name, const char *func_name, int line_no) {
+    return fmt::format("[{} {} {}:{}] {:5} ", getLogOutPutTime(), file_name, func_name, line_no, getLogLevelStr(lvl));
 }
 
 bool MarsLogger::createFile (std::string path) {
@@ -104,11 +98,11 @@ bool MarsLogger::createFile (std::string path) {
     }
 }
 
-bool MarsLogger::ifFileOutPut (FileLogLevel file_log_level) {
+bool MarsLogger::ifFileOutPut (LogLevel file_log_level) {
     return fileCoutMap[file_log_level] && loggerConfig.logFileSwitch;
 }
 
-bool MarsLogger::ifTerminalOutPut (TerminalLogLevel terminal_log_level) {
+bool MarsLogger::ifTerminalOutPut (LogLevel terminal_log_level) {
     return terminalCoutMap[terminal_log_level] && loggerConfig.logTerminalSwitch;
 }
 
@@ -127,7 +121,7 @@ std::string MarsLogger::getLogOutPutTime() {
     return timeString;
 }
 
-void MarsLogger::bindFileOutPutLevelMap (std::string json_value, FileLogLevel file_log_level) {
+void MarsLogger::bindFileOutPutLevelMap (std::string json_value, LogLevel file_log_level) {
     if(loggerConfig.logFileLevel.find(json_value) != std::string::npos)
         fileCoutMap[file_log_level] = true;
     else {
@@ -135,7 +129,7 @@ void MarsLogger::bindFileOutPutLevelMap (std::string json_value, FileLogLevel fi
     }
 }
 
-void MarsLogger::bindTerminalOutPutLevelMap (std::string json_value, TerminalLogLevel terminal_log_level) {
+void MarsLogger::bindTerminalOutPutLevelMap (std::string json_value, LogLevel terminal_log_level) {
     if(loggerConfig.logTerminalLevel.find(json_value) != std::string::npos)
         terminalCoutMap[terminal_log_level] = true;
     else {

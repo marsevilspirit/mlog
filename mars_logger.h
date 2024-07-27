@@ -10,67 +10,41 @@
 #include <fmt/core.h>
 
 #define LOG_CONFIG_PATH "./logconf.json"
-#define MARS_LOGGER_CALL
-
 #define RED "\033[31m"
 #define GREEN "\033[32m"
 #define YELLOW "\033[33m"
 #define RESET "\033[0m"
-
-using std::string;
+#define WHITE "\033[37m"
 
 namespace mars {
 
 enum class LogLevel : int { FATAL = 0, ERROR, WARN, INFO, DEBUG, TRACE };
 
-//                                    0          1     2      3     4      5
-enum class TerminalLogLevel : int { FATAL = 0, ERROR, WARN, INFO, DEBUG, TRACE };
-
-//                                0          1     2      3     4      5
-enum class FileLogLevel : int { FATAL = 0, ERROR, WARN, INFO, DEBUG, TRACE };
-
 struct LoggerConfig {
-    bool    logSwitch;
-    bool    logTerminalSwitch;
-    string  logTerminalLevel;
-    bool    logFileSwitch; 
-    string  logFileLevel;
-    string  logFileName;
-    string  logFilePath;
-    string  logFileMaxSize;
-    string  logFileReachMaxBehavior;
+    bool         logSwitch;
+    bool         logTerminalSwitch;
+    std::string  logTerminalLevel;
+    bool         logFileSwitch; 
+    std::string  logFileLevel;
+    std::string  logFileName;
+    std::string  logFilePath;
 };
-
-#ifndef LOG_LEVEL
-#define LOG_LEVEL INFO //默认日志级别
-#endif
 
 class MarsLogger {
 public:
     void initLogConfig();
     void releaseLogConfig();
     std::string LogHead(LogLevel lvl, const char *file_name, const char *func_name, int line_no);
-    bool ifFileOutPut(FileLogLevel fileLogLevel);
-    bool ifTerminalOutPut(TerminalLogLevel terminalLogLevel);
+    bool ifFileOutPut(LogLevel fileLogLevel);
+    bool ifTerminalOutPut(LogLevel terminalLogLevel);
     std::string getLogFileNameTime();
     std::string getLogOutPutTime();
-    std::string getLogFileName() {
-        return loggerConfig.logFileName;
-    }
-    
-    std::ofstream& getFile() {
-        return file;
-    }
-
-    bool LoggerStart() {
-        return loggerConfig.logSwitch;
-    }
-
+    std::string getLogFileName() {return loggerConfig.logFileName;}
+    std::ofstream& getFile() {return file;}
+    bool LoggerStart() {return loggerConfig.logSwitch;}
     static MarsLogger* getInstance();
-
-    void bindFileOutPutLevelMap(std::string json_value, FileLogLevel fileLogLevel);
-    void bindTerminalOutPutLevelMap(std::string json_value, TerminalLogLevel terminalLogLevel);
-
+    void bindFileOutPutLevelMap(std::string json_value, LogLevel fileLogLevel);
+    void bindTerminalOutPutLevelMap(std::string json_value, LogLevel terminalLogLevel);
     bool createFile (std::string path);
 
     template <typename T>
@@ -86,65 +60,20 @@ public:
         }
     }
 
-private:
-    LoggerConfig loggerConfig;
-    static MarsLogger* single_instance;
-    static std::mutex* mutex_new;
-    std::map<FileLogLevel, bool> fileCoutMap;
-    std::map<TerminalLogLevel, bool> terminalCoutMap;
-    std::ostringstream stream;
-    std::ofstream file;
-
-    friend class LoggerMacros;
-
-    MarsLogger();
-    ~MarsLogger();
-
-public:
     template <typename ...Args>
-    void _log_trace(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        _log_impl("TRACE", fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    void _log_debug(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        _log_impl("DEBUG", fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    void _log_info(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        _log_impl("INFO", fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    void _log_warn(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        _log_impl("WARN", fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    void _log_error(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        _log_impl("ERROR", fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    void _log_fatal(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
-        _log_impl("FATAL", fmt, file_name, func_name, line_no, args...);
-    }
-
-    template <typename ...Args>
-    void _log_impl(const char* level, const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
+    void _log_impl(LogLevel level, const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
         if (!LoggerStart()) {
             return;
         }
 
-        bool Terminal = ifTerminalOutPut(static_cast<TerminalLogLevel>(getLogLevel(level)));
-        bool File = ifFileOutPut(static_cast<FileLogLevel>(getLogLevel(level)));
+        bool Terminal = ifTerminalOutPut(level);
+        bool File = ifFileOutPut(level);
 
         if (!Terminal && !File) {
             return;
         }
 
-        std::string log = LogHead(getLogLevel(level), file_name, func_name, line_no);
+        std::string log = LogHead(level, file_name, func_name, line_no);
         log = log + fmt::format(fmt, args...);
 
         if (Terminal) {
@@ -156,25 +85,25 @@ public:
         }
     }
 
-    LogLevel getLogLevel(const char* level) {
-        if (strcmp(level, "TRACE") == 0) return LogLevel::TRACE;
-        if (strcmp(level, "DEBUG") == 0) return LogLevel::DEBUG;
-        if (strcmp(level, "INFO") == 0) return LogLevel::INFO;
-        if (strcmp(level, "WARN") == 0) return LogLevel::WARN;
-        if (strcmp(level, "ERROR") == 0) return LogLevel::ERROR;
-        if (strcmp(level, "FATAL") == 0) return LogLevel::FATAL;
-        return LogLevel::INFO;
-    }
+private:
+    LoggerConfig loggerConfig;
+    static MarsLogger* single_instance;
+    static std::mutex* mutex_new;
+    std::map<LogLevel, bool> fileCoutMap;
+    std::map<LogLevel, bool> terminalCoutMap;
+    std::ofstream file;
+
+    MarsLogger();
+    ~MarsLogger();
 };
 
 }
 
-#define LogInfo(fmt, ...)   mars::MarsLogger::getInstance()->_log_info(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->_log_warn(YELLOW fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogError(fmt, ...)  mars::MarsLogger::getInstance()->_log_error(RED fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogFatal(fmt, ...)  mars::MarsLogger::getInstance()->_log_fatal(RED fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogDebug(fmt, ...)  mars::MarsLogger::getInstance()->_log_debug(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogTrace(fmt, ...)  mars::MarsLogger::getInstance()->_log_trace(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-
+#define LogInfo(fmt, ...)   mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::INFO, WHITE fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::WARN, YELLOW fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogError(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::ERROR, RED fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogFatal(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::FATAL, RED fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogDebug(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::DEBUG, WHITE fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogTrace(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::TRACE, WHITE fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
 
 #endif
