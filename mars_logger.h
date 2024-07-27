@@ -44,8 +44,8 @@ public:
     std::ofstream& getFile() {return file;}
     bool LoggerStart() {return loggerConfig.logSwitch;}
     static MarsLogger* getInstance();
-    void bindFileOutPutLevelMap(std::string json_value, LogLevel fileLogLevel);
-    void bindTerminalOutPutLevelMap(std::string json_value, LogLevel terminalLogLevel);
+    void bindFileOutPutLevelMap(const std::string& levels);
+    void bindTerminalOutPutLevelMap(const std::string& levels);
     bool createFile (std::string path);
     ~MarsLogger();
 

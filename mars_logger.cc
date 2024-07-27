@@ -20,11 +20,18 @@ MarsLogger::MarsLogger () {
 }
 
 MarsLogger::~MarsLogger () {
-    file.close();
+    if (file.is_open()) {
+        file.close();
+    }
 }
 
 void MarsLogger::initLogConfig () {
     std::ifstream input(LOG_CONFIG_PATH);
+    if (!input) {
+        std::cerr << "Failed to open log config file" << std::endl;
+        return;
+    }
+
     Json::Reader reader;
     Json::Value root;
     if (!reader.parse(input, root, false)) {
@@ -40,19 +47,8 @@ void MarsLogger::initLogConfig () {
     loggerConfig.logFileName       = root["logFileName"].asString() + getLogFileNameTime() + ".log";
     loggerConfig.logFilePath       = root["logFilePath"].asString();
 
-    bindFileOutPutLevelMap("5", LogLevel::TRACE);
-    bindFileOutPutLevelMap("4", LogLevel::DEBUG);
-    bindFileOutPutLevelMap("3", LogLevel::INFO);
-    bindFileOutPutLevelMap("2", LogLevel::WARN);
-    bindFileOutPutLevelMap("1", LogLevel::ERROR);
-    bindFileOutPutLevelMap("0", LogLevel::FATAL);
-
-    bindTerminalOutPutLevelMap("5", LogLevel::TRACE);
-    bindTerminalOutPutLevelMap("4", LogLevel::DEBUG);
-    bindTerminalOutPutLevelMap("3", LogLevel::INFO);
-    bindTerminalOutPutLevelMap("2", LogLevel::WARN);
-    bindTerminalOutPutLevelMap("1", LogLevel::ERROR);
-    bindTerminalOutPutLevelMap("0", LogLevel::FATAL);
+    bindFileOutPutLevelMap(loggerConfig.logFileLevel);
+    bindTerminalOutPutLevelMap(loggerConfig.logTerminalLevel);
 
     if (loggerConfig.logSwitch && loggerConfig.logFileSwitch) {
         if (!createFile(loggerConfig.logFilePath)) {
@@ -109,30 +105,32 @@ bool MarsLogger::ifTerminalOutPut (LogLevel terminal_log_level) {
 //得到log文件名的时间部分
 std::string MarsLogger::getLogFileNameTime() {
     std::time_t time = std::time(nullptr);
-    char timeString[std::size("yyyy-mm-dd-hh:mm:ss")];
+    char timeString[20];
     strftime(timeString, sizeof(timeString), "%Y-%m-%d-%H:%M:%S",localtime(&time));
     return timeString;
 }
 
 std::string MarsLogger::getLogOutPutTime() {
     std::time_t time = std::time(nullptr);
-    char timeString[std::size("yyyy-mm-dd hh:mm:ss")];
+    char timeString[20];
     strftime(timeString, sizeof(timeString), "%Y-%m-%d %H:%M:%S",localtime(&time));
     return timeString;
 }
 
-void MarsLogger::bindFileOutPutLevelMap (std::string json_value, LogLevel file_log_level) {
-    if(loggerConfig.logFileLevel.find(json_value) != std::string::npos)
-        fileCoutMap[file_log_level] = true;
-    else {
-        fileCoutMap[file_log_level] = false;
-    }
+void MarsLogger::bindFileOutPutLevelMap(const std::string& levels) {
+    fileCoutMap[LogLevel::TRACE] = levels.find("5") != std::string::npos;
+    fileCoutMap[LogLevel::DEBUG] = levels.find("4") != std::string::npos;
+    fileCoutMap[LogLevel::INFO]  = levels.find("3") != std::string::npos;
+    fileCoutMap[LogLevel::WARN]  = levels.find("2") != std::string::npos;
+    fileCoutMap[LogLevel::ERROR] = levels.find("1") != std::string::npos;
+    fileCoutMap[LogLevel::FATAL] = levels.find("0") != std::string::npos;
 }
 
-void MarsLogger::bindTerminalOutPutLevelMap (std::string json_value, LogLevel terminal_log_level) {
-    if(loggerConfig.logTerminalLevel.find(json_value) != std::string::npos)
-        terminalCoutMap[terminal_log_level] = true;
-    else {
-        terminalCoutMap[terminal_log_level] = false;
-    }
+void MarsLogger::bindTerminalOutPutLevelMap(const std::string& levels) {
+    terminalCoutMap[LogLevel::TRACE] = levels.find("5") != std::string::npos;
+    terminalCoutMap[LogLevel::DEBUG] = levels.find("4") != std::string::npos;
+    terminalCoutMap[LogLevel::INFO]  = levels.find("3") != std::string::npos;
+    terminalCoutMap[LogLevel::WARN]  = levels.find("2") != std::string::npos;
+    terminalCoutMap[LogLevel::ERROR] = levels.find("1") != std::string::npos;
+    terminalCoutMap[LogLevel::FATAL] = levels.find("0") != std::string::npos;
 }
