@@ -100,10 +100,10 @@ private:
     std::unordered_map<LogLevel, std::string> logLevelMap {
         {LogLevel::FATAL, RED "FATAL" RESET},
         {LogLevel::ERROR, RED "ERROR" RESET},
-        {LogLevel::WARN, YELLOW "WARN" RESET},
-        {LogLevel::INFO, "INFO"},
-        {LogLevel::DEBUG, "DEBUG"},
-        {LogLevel::TRACE, "TRACE"}
+        {LogLevel::WARN, YELLOW "WARN " RESET},
+        {LogLevel::INFO, WHITE "INFO " RESET},
+        {LogLevel::DEBUG, WHITE "DEBUG" RESET},
+        {LogLevel::TRACE, WHITE "TRACE" RESET}
     };
 
     MarsLogger();
