@@ -39,8 +39,10 @@ Level从0到5依次是`Fatal，Error，Warn，Info，Debug，Trace`
     "logTerminalLevel": "0,1,2,3,4,5",
     "logFileSwitch": false, 
     "logFileLevel": "0,1,2,3,4,5",
-    "logFileName": "app_log",
-    "logFilePath": "/home/mars/code/"
+    "logFileName": "test_log",
+    "logFilePath": "/home/mars/code/cpp_log/",
+    "details": false,
+    "time": true
 }
 ```
 
