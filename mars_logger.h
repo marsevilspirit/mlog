@@ -97,37 +97,37 @@ private:
 
 public:
     template <typename ...Args>
-    void Log_Trace(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
+    void _log_trace(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
         log_impl("TRACE", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
-    void Log_Debug(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
+    void _log_debug(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
         log_impl("DEBUG", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
-    void Log_Info(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
+    void _log_info(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
         log_impl("INFO", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
-    void Log_Warn(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
+    void _log_warn(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
         log_impl("WARN", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
-    void Log_Error(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
+    void _log_error(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
         log_impl("ERROR", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
-    void Log_Fatal(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
+    void _log_fatal(const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
         log_impl("FATAL", fmt, file_name, func_name, line_no, args...);
     }
 
     template <typename ...Args>
-    void log_impl(const char* level, const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
+    void _log_impl(const char* level, const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
         if (!LoggerStart()) {
             return;
         }
@@ -164,12 +164,12 @@ public:
 
 }
 
-#define LogInfo(fmt, ...)   mars::MarsLogger::getInstance()->Log_Info(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->Log_Warn(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogError(fmt, ...)  mars::MarsLogger::getInstance()->Log_Error(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogFatal(fmt, ...)  mars::MarsLogger::getInstance()->Log_Fatal(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogDebug(fmt, ...)  mars::MarsLogger::getInstance()->Log_Debug(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogTrace(fmt, ...)  mars::MarsLogger::getInstance()->Log_Trace(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogInfo(fmt, ...)   mars::MarsLogger::getInstance()->_log_info(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->_log_warn(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogError(fmt, ...)  mars::MarsLogger::getInstance()->_log_error(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogFatal(fmt, ...)  mars::MarsLogger::getInstance()->_log_fatal(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogDebug(fmt, ...)  mars::MarsLogger::getInstance()->_log_debug(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogTrace(fmt, ...)  mars::MarsLogger::getInstance()->_log_trace(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
 
 
 #endif
