@@ -1,10 +1,8 @@
-# mlog
-
-
-
 mlog是一个用于C++程序服务的轻量，高性能日志库，可输出六种日志类型（Fatal，Error，Warn，Info，Debug，Trace），操作简单，支持高自定义输出类型，终端输出，文件输出，用`json`作为配置文件。
 
-## 平台(Platforms)
+
+
+#### 平台支持
 
 * `Linux`(ok)
 * `mac`(maybe)
@@ -14,7 +12,7 @@ mlog是一个用于C++程序服务的轻量，高性能日志库，可输出六�
 
 
 
-## 依赖
+#### 依赖
 
 需要c++的fmt库，json库
 
@@ -28,7 +26,33 @@ $ yay fmt json
 
 
 
-## 使用方法(Usage samples)
+#### 配置文件
+
+```
+{
+    "logSwitch": true,
+    "logTerminalSwitch": true,
+    "logTerminalLevel": "0,1,2,3,4,5",
+    "logFileSwitch": false, 
+    "logFileLevel": "0,1,2,3,4,5",
+    "logFileName": "app_log",
+    "logFilePath": "/home/mars/code/",
+    "logFileMaxSize": "100",
+    "logFileReachMaxBehavior": "nothing"
+}
+```
+
+
+
+#### 编译命令
+
+```
+g++ test.cpp mars_logger.cc -ljsoncpp -lstdc++fs -o logger.out -lfmt
+```
+
+
+
+#### 使用方法
 
 ```c++
 LogTrace("mlog is the NO.{}!", 10000000);
@@ -39,13 +63,16 @@ LogError("mlog is the NO.{}!", 10000000);
 LogFatal("mlog is the NO.{}!", 10000000);
 ```
 
-## 性能测试
+
+
+#### 性能测试
 
 ```c++
 #include "mars_logger.h"
 
 int main()
 {
+    // 初始化日志, 获取单例
     mars::MarsLogger* logger = mars::MarsLogger::getInstance();
 
     time_t begin, end;
@@ -60,8 +87,8 @@ int main()
         mars::LogTrace("我是{}", name);
     }
     end = clock();
-    ret = double(end-begin) / CLOCKS_PER_SEC;
-    std::cout <<"runtime:   "<<ret<<std::endl;
+    ret = double(end - begin) / CLOCKS_PER_SEC;
+    std::cout << "runtime:   " << ret << std::endl;
     
     return 0;
 }
@@ -69,9 +96,15 @@ int main()
 
 
 
+| 输出类型             | 时间      |
+| -------------------- | --------- |
+| 只输出到终端         | 0.102091s |
+| 只输出到文件         | 0.085482s |
+| 同时输出到文件和终端 | 0.109722s |
 
 
-## 目前可能面临的问题
+
+#### 目前可能面临的问题
 
 - 在多线程环境下可能线程不安全
 - 终端日志不会等待文件日志结束就会终止程序(已发现)
