@@ -74,6 +74,8 @@ public:
         std::string log = LogHead(level, file_name, func_name, line_no);
         log = log + fmt::format(fmt, args...);
 
+        std::lock_guard<std::mutex> lock(log_mutex); // 加锁以确保线程安全
+
         if (Terminal) {
             std::cout << log << '\n'; 
         }
@@ -87,6 +89,7 @@ private:
     LoggerConfig loggerConfig;
     static std::unique_ptr<MarsLogger> single_instance;
     static std::mutex mtx;
+     std::mutex log_mutex; // 保护日志输出的互斥量
     std::unordered_map<LogLevel, bool> fileCoutMap;
     std::unordered_map<LogLevel, bool> terminalCoutMap;
     std::ofstream file;
