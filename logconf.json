@@ -2,10 +2,10 @@
     "logSwitch": true,
     "logTerminalSwitch": true,
     "logTerminalLevel": "0,1,2,3,4,5",
-    "logFileSwitch": false, 
+    "logFileSwitch": true, 
     "logFileLevel": "0,1,2,3,4,5",
     "logFileName": "test_log",
     "logFilePath": "/home/mars/code/cpp_log/",
-    "details": false,
+    "details": true,
     "time": true
 }

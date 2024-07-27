@@ -60,6 +60,8 @@ g++ test.cpp mars_logger.cc -ljsoncpp -lstdc++fs -o logger.out -lfmt
 
 无需任何初始化，直接调用即可(你就说方便不方便)
 
+为了追求极简性，我只写了一个格式化方法，但也绝对够用，可以输出任何类型。
+
 ```c++
 LogTrace("mlog is the NO.{}!", 10000000);
 LogDebug("mlog is {}!", "best");
@@ -72,7 +74,7 @@ LogInfo("mlog is the NO.10000000");
 
 
 
-#### 性能测试
+#### 性能测试(details和time全部开启的情况下)
 
 ```c++
 #include "mars_logger.h"
@@ -84,7 +86,8 @@ int main()
     begin = clock();
     std::string name = "mars";
     for(int i = 0; i< 10000; i++){
-        LogError("我是{} {}", name, i);
+        LogFatal("我是{}{}", name, i);
+        LogError("我是{} {}", name);
         LogWarn("我是{}", name);
         LogInfo("我是{}", name);
         LogDebug("我是{}", name);
@@ -98,13 +101,13 @@ int main()
 }
 ```
 
+每个测试经过5次测试平均算出：
 
-
-|       输出类型       | 时间      |
-| :------------------: | --------- |
-|     只输出到终端     | 0.102091s |
-|     只输出到文件     | 0.085482s |
-| 同时输出到文件和终端 | 0.109722s |
+|       输出类型       | 时间       |
+| :------------------: | ---------- |
+|     只输出到终端     | 0.1317504s |
+|     只输出到文件     | 0.0846052s |
+| 同时输出到文件和终端 | 0.1354280s |
 
 
 

@@ -7,7 +7,8 @@ int main()
     begin = clock();
     std::string name = "mars";
     for(int i = 0; i< 10000; i++){
-        LogError("我是{} {}", name, i);
+        LogFatal("我是{}{}", name, i);
+        LogError("我是{}", name);
         LogWarn("我是{}", name);
         LogInfo("我是{}", name);
         LogDebug("我是{}", name);
