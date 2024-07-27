@@ -46,7 +46,7 @@ public:
     static MarsLogger* getInstance();
     void bindFileOutPutLevelMap(const std::string& levels);
     void bindTerminalOutPutLevelMap(const std::string& levels);
-    bool createFile (std::string path);
+    bool createFile(const std::string& path, const std::string& fileName);
     ~MarsLogger();
 
     template <typename T>

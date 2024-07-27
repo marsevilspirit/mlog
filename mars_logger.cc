@@ -51,7 +51,7 @@ void MarsLogger::initLogConfig () {
     bindTerminalOutPutLevelMap(loggerConfig.logTerminalLevel);
 
     if (loggerConfig.logSwitch && loggerConfig.logFileSwitch) {
-        if (!createFile(loggerConfig.logFilePath)) {
+        if (!createFile(loggerConfig.logFilePath, loggerConfig.logFileName)) {
             std::cout << "Log work path creation failed\n";
         }
     }
@@ -63,36 +63,36 @@ std::string MarsLogger::LogHead (LogLevel lvl, const char *file_name, const char
     return fmt::format("[{} {} {}:{}] {:5} ", getLogOutPutTime(), file_name, func_name, line_no, getLogLevelStr(lvl));
 }
 
-bool MarsLogger::createFile (std::string path) {
-    namespace fs = std::filesystem;    
+bool MarsLogger::createFile(const std::string& path, const std::string& fileName) {
+    namespace fs = std::filesystem;
     try {
-        if (fs::exists(loggerConfig.logFileName)) {
-            std::cerr << "File already exists: " << path << std::endl;
-            return false;
-        }
+        // 创建完整的文件路径
+        fs::path logFilePath = fs::path(path) / fileName;
+        fs::path parent_path = logFilePath.parent_path();
 
-        fs::path parent_path = fs::path(path).parent_path();
-
+        // 如果目录不存在，创建目录
         if (!parent_path.empty() && !fs::exists(parent_path)) {
-            std::cout << "你指定的log文件路径不存在，正在创建\n";
+            std::cout << "Creating directories: " << parent_path << std::endl;
             if (!fs::create_directories(parent_path)) {
                 std::cerr << "Failed to create directories: " << parent_path << std::endl;
                 return false;
             }
         }
-        
-        file = std::ofstream(loggerConfig.logFileName);
-        if (!file) {
-            std::cerr << "Failed to create file: " << path << std::endl;
+
+        // 打开文件
+        file.open(logFilePath);
+        if (!file.is_open()) {
+            std::cerr << "Failed to create file: " << logFilePath << std::endl;
             return false;
-        }        
+        }
 
         return true;
-    } catch (const std::exception &e) {
+    } catch (const std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
         return false;
     }
 }
+
 
 bool MarsLogger::ifFileOutPut (LogLevel file_log_level) {
     return fileCoutMap[file_log_level] && loggerConfig.logFileSwitch;
