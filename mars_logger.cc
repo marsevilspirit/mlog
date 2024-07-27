@@ -2,17 +2,17 @@
 
 using namespace mars;
 
-MarsLogger * MarsLogger::single_instance = nullptr;
-std::mutex * MarsLogger::mutex_new = new std::mutex();
+std::unique_ptr<MarsLogger> MarsLogger::single_instance = nullptr;
+std::mutex MarsLogger::mtx;
 
-//获得单例
-MarsLogger* MarsLogger::getInstance () {
-    mutex_new->lock(); 
-    if (single_instance == nullptr) {
-        single_instance = new MarsLogger();
+MarsLogger* MarsLogger::getInstance() {
+    if (!single_instance) { 
+        std::lock_guard<std::mutex> lock(mtx); 
+        if (!single_instance) { 
+            single_instance.reset(new MarsLogger()); 
+        }
     }
-    mutex_new->unlock();
-    return single_instance;
+    return single_instance.get(); 
 }
 
 MarsLogger::MarsLogger () {
@@ -32,13 +32,13 @@ void MarsLogger::initLogConfig () {
         return;
     }
 
-    loggerConfig.logSwitch = root["logSwitch"].asBool();
+    loggerConfig.logSwitch         = root["logSwitch"].asBool();
     loggerConfig.logTerminalSwitch = root["logTerminalSwitch"].asBool();
-    loggerConfig.logTerminalLevel = root["logTerminalLevel"].asString();
-    loggerConfig.logFileSwitch = root["logFileSwitch"].asBool();
-    loggerConfig.logFileLevel = root["logFileLevel"].asString();
-    loggerConfig.logFileName = root["logFileName"].asString() + getLogFileNameTime() + ".log";
-    loggerConfig.logFilePath = root["logFilePath"].asString();
+    loggerConfig.logTerminalLevel  = root["logTerminalLevel"].asString();
+    loggerConfig.logFileSwitch     = root["logFileSwitch"].asBool();
+    loggerConfig.logFileLevel      = root["logFileLevel"].asString();
+    loggerConfig.logFileName       = root["logFileName"].asString() + getLogFileNameTime() + ".log";
+    loggerConfig.logFilePath       = root["logFilePath"].asString();
 
     bindFileOutPutLevelMap("5", LogLevel::TRACE);
     bindFileOutPutLevelMap("4", LogLevel::DEBUG);

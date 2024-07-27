@@ -8,6 +8,7 @@
 #include <mutex>
 #include <filesystem>
 #include <fmt/core.h>
+#include <unordered_map>
 
 #define LOG_CONFIG_PATH "./logconf.json"
 #define RED "\033[31m"
@@ -46,18 +47,15 @@ public:
     void bindFileOutPutLevelMap(std::string json_value, LogLevel fileLogLevel);
     void bindTerminalOutPutLevelMap(std::string json_value, LogLevel terminalLogLevel);
     bool createFile (std::string path);
+    ~MarsLogger();
 
     template <typename T>
-    std::string getLogLevelStr (T level) {
-        switch (int(level)) {
-            case 0:    return "FATAL";
-            case 1:    return "ERROR";
-            case 2:    return "WARN";
-            case 3:    return "INFO";
-            case 4:    return "DEBUG";
-            case 5:    return "TRACE";
-            default:   return "UNKNOWN";
+    std::string getLogLevelStr(T level) {
+        auto it = logLevelMap.find(level);
+        if (it != logLevelMap.end()) {
+            return it->second;
         }
+        return "UNKNOWN";
     }
 
     template <typename ...Args>
@@ -87,14 +85,21 @@ public:
 
 private:
     LoggerConfig loggerConfig;
-    static MarsLogger* single_instance;
-    static std::mutex* mutex_new;
-    std::map<LogLevel, bool> fileCoutMap;
-    std::map<LogLevel, bool> terminalCoutMap;
+    static std::unique_ptr<MarsLogger> single_instance;
+    static std::mutex mtx;
+    std::unordered_map<LogLevel, bool> fileCoutMap;
+    std::unordered_map<LogLevel, bool> terminalCoutMap;
     std::ofstream file;
+    std::unordered_map<LogLevel, std::string> logLevelMap {
+        {LogLevel::FATAL, "FATAL"},
+        {LogLevel::ERROR, "ERROR"},
+        {LogLevel::WARN, "WARN"},
+        {LogLevel::INFO, "INFO"},
+        {LogLevel::DEBUG, "DEBUG"},
+        {LogLevel::TRACE, "TRACE"}
+    };
 
     MarsLogger();
-    ~MarsLogger();
 };
 
 }

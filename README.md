@@ -40,9 +40,7 @@ Level从0到5依次是`Fatal，Error，Warn，Info，Debug，Trace`
     "logFileSwitch": false, 
     "logFileLevel": "0,1,2,3,4,5",
     "logFileName": "app_log",
-    "logFilePath": "/home/mars/code/",
-    "logFileMaxSize": "100",
-    "logFileReachMaxBehavior": "nothing"
+    "logFilePath": "/home/mars/code/"
 }
 ```
 
