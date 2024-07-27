@@ -12,6 +12,11 @@
 #define LOG_CONFIG_PATH "./logconf.json"
 #define MARS_LOGGER_CALL
 
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define RESET "\033[0m"
+
 using std::string;
 
 namespace mars {
@@ -165,9 +170,9 @@ public:
 }
 
 #define LogInfo(fmt, ...)   mars::MarsLogger::getInstance()->_log_info(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->_log_warn(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogError(fmt, ...)  mars::MarsLogger::getInstance()->_log_error(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogFatal(fmt, ...)  mars::MarsLogger::getInstance()->_log_fatal(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->_log_warn(YELLOW fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogError(fmt, ...)  mars::MarsLogger::getInstance()->_log_error(RED fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogFatal(fmt, ...)  mars::MarsLogger::getInstance()->_log_fatal(RED fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
 #define LogDebug(fmt, ...)  mars::MarsLogger::getInstance()->_log_debug(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
 #define LogTrace(fmt, ...)  mars::MarsLogger::getInstance()->_log_trace(fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
 

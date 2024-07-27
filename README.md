@@ -30,6 +30,8 @@ $ yay fmt json
 
 #### 配置文件(命名为`logconf.json`)
 
+Level从0到5依次是`Fatal，Error，Warn，Info，Debug，Trace`
+
 ```json
 {
     "logSwitch": true,
@@ -111,8 +113,6 @@ int main()
 - 在多线程环境下可能线程不安全
 
 - 终端日志不会等待文件日志结束就会终止程序(已发现)
-
-- 无颜色差别，不好分清不同的日志
 
 -  尚未实现限制文件日志大小
 

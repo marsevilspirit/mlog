@@ -58,7 +58,7 @@ void MarsLogger::initLogConfig () {
     bindTerminalOutPutLevelMap("1", TerminalLogLevel::ERROR);
     bindTerminalOutPutLevelMap("0", TerminalLogLevel::FATAL);
 
-    if(loggerConfig.logSwitch && loggerConfig.logFileSwitch){
+    if (loggerConfig.logSwitch && loggerConfig.logFileSwitch) {
         if(!createFile(loggerConfig.logFilePath)){
             std::cout << "Log work path creation failed\n";
         }
@@ -70,8 +70,7 @@ void MarsLogger::initLogConfig () {
 std::string MarsLogger::LogHead(LogLevel lvl, const char *file_name, const char *func_name, int line_no) {
     std::string logLevelStr = getLogLevelStr(lvl);
     std::string logTime = getLogOutPutTime();
-    std::string res = "[" + logTime + " " + file_name + " " + func_name + ":" + std::to_string(line_no) + "]" + " " + logLevelStr + " ";
-    return res;
+    return fmt::format("[{} {} {}:{}] {:5} ",logTime, file_name, func_name, line_no, logLevelStr);
 }
 
 bool MarsLogger::createFile (std::string path) {
