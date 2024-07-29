@@ -9,6 +9,7 @@ MarsLogger* MarsLogger::getInstance() {
     if (!single_instance) { 
         std::lock_guard<std::mutex> lock(mtx); 
         if (!single_instance) { 
+            std::cout << "logger ready\n";
             single_instance.reset(new MarsLogger()); 
         }
     }
@@ -20,15 +21,15 @@ MarsLogger::MarsLogger () {
 }
 
 MarsLogger::~MarsLogger () {
-    if (file.is_open()) {
-        file.close();
+    if (output_file.is_open()) {
+        output_file.close();
     }
 }
 
 void MarsLogger::initLogConfig () {
     std::ifstream input(LOG_CONFIG_PATH);
     if (!input) {
-        std::cerr << "Failed to open log config file" << std::endl;
+        std::cerr << "Unable to find the log configuration file, please make sure the file path is correct" << std::endl;
         return;
     }
 
@@ -94,8 +95,8 @@ bool MarsLogger::createFile(const std::string& path, const std::string& fileName
         }
 
         // 打开文件
-        file.open(logFilePath);
-        if (!file.is_open()) {
+        output_file.open(logFilePath);
+        if (!output_file.is_open()) {
             std::cerr << "Failed to create file: " << logFilePath << std::endl;
             return false;
         }

@@ -36,14 +36,12 @@ struct LoggerConfig {
 class MarsLogger {
 public:
     void initLogConfig();
-    void releaseLogConfig();
     std::string LogHead(LogLevel lvl, const char *file_name, const char *func_name, int line_no);
     bool ifFileOutPut(LogLevel fileLogLevel);
     bool ifTerminalOutPut(LogLevel terminalLogLevel);
     std::string getLogFileNameTime();
     std::string getLogOutPutTime();
     std::string getLogFileName() {return loggerConfig.logFileName;}
-    std::ofstream& getFile() {return file;}
     bool LoggerStart() {return loggerConfig.logSwitch;}
     static MarsLogger* getInstance();
     void bindFileOutPutLevelMap(const std::string& levels);
@@ -73,8 +71,7 @@ public:
             return;
         }
 
-        std::string log = LogHead(level, file_name, func_name, line_no);
-        log = log + fmt::format(fmt, args...);
+        std::string log = LogHead(level, file_name, func_name, line_no) + fmt::format(fmt, args...);
 
         {
             std::lock_guard<std::mutex> lock(log_mutex); // 加锁以确保线程安全
@@ -84,7 +81,7 @@ public:
             }
 
             if (File) {
-                getFile() << log << '\n';
+                output_file << log << '\n';
             }
         }
     }
@@ -96,7 +93,7 @@ private:
      std::mutex log_mutex; // 保护日志输出的互斥量
     std::unordered_map<LogLevel, bool> fileCoutMap;
     std::unordered_map<LogLevel, bool> terminalCoutMap;
-    std::ofstream file;
+    std::ofstream output_file;
     std::unordered_map<LogLevel, std::string> logLevelMap {
         {LogLevel::FATAL, RED "FATAL" RESET},
         {LogLevel::ERROR, RED "ERROR" RESET},
