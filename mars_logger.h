@@ -107,11 +107,11 @@ private:
 
 }
 
-#define LogInfo(fmt, ...)   mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::INFO, WHITE fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::WARN, YELLOW fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogError(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::ERROR, RED fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogFatal(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::FATAL, RED fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogDebug(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::DEBUG, WHITE fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-#define LogTrace(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::TRACE, WHITE fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__)
+#define LogInfo(fmt, ...)   mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::INFO, WHITE fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
+#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::WARN, YELLOW fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
+#define LogError(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::ERROR, RED fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
+#define LogFatal(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::FATAL, RED fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
+#define LogDebug(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::DEBUG, WHITE fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
+#define LogTrace(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::TRACE, WHITE fmt RESET, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
 
 #endif

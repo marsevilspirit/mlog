@@ -86,12 +86,12 @@ int main()
     begin = clock();
     std::string name = "mars";
     for(int i = 0; i< 10000; i++){
-        LogFatal("我是{}{}", name, i);
-        LogError("我是{}", name);
-        LogWarn("我是{}", name);
-        LogInfo("我是{}", name);
-        LogDebug("我是{}", name);
-        LogTrace("我是{}", name);
+        LogFatal("我是{}{}", name, i)
+        LogError("我是{}", name)
+        LogWarn("我是{}", name)
+        LogInfo("我是{}", name)
+        LogDebug("我是{}", name)
+        LogTrace("我是{}", name)
     }
     end = clock();
     ret = double(end - begin) / CLOCKS_PER_SEC;
