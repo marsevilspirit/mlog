@@ -36,13 +36,14 @@ struct LoggerConfig {
 class MarsLogger {
 public:
     void initLogConfig();
-    std::string LogHead(LogLevel lvl, const char *file_name, const char *func_name, int line_no);
     bool ifFileOutPut(LogLevel fileLogLevel);
     bool ifTerminalOutPut(LogLevel terminalLogLevel);
     std::string getLogFileNameTime();
     std::string getLogOutPutTime();
     std::string getLogFileName() {return loggerConfig.logFileName;}
     static MarsLogger* getInstance();
+    std::string LogHead(LogLevel lvl);
+    std::string LogDetail(const char *file_name, const char *func_name, int line_no);
     void bindFileOutPutLevelMap(const std::string& levels);
     void bindTerminalOutPutLevelMap(const std::string& levels);
     bool createFile(const std::string& path, const std::string& fileName);
@@ -70,7 +71,7 @@ public:
             return;
         }
 
-        std::string log = LogHead(level, file_name, func_name, line_no) + fmt::format(fmt, args...);
+        std::string log = LogHead(level) + fmt::format(fmt, args...) + LogDetail(file_name, func_name, line_no);
 
         {
             std::lock_guard<std::mutex> lock(log_mutex); // 加锁以确保线程安全
