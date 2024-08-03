@@ -118,17 +118,23 @@ bool MarsLogger::ifTerminalOutPut (LogLevel terminal_log_level) {
 
 //得到log文件名的时间部分
 std::string MarsLogger::getLogFileNameTime() {
-    std::time_t time = std::time(nullptr);
-    char timeString[20];
-    strftime(timeString, sizeof(timeString), "%Y-%m-%d-%H:%M:%S",localtime(&time));
-    return timeString;
+    std::time_t now = std::time(nullptr);
+    std::tm tm_buf;
+    localtime_r(&now, &tm_buf);
+
+    std::array<char, 20> timeString;
+    strftime(timeString.data(), timeString.size(), "%Y-%m-%d-%H:%M:%S", &tm_buf);
+    return std::string(timeString.data());
 }
 
 std::string MarsLogger::getLogOutPutTime() {
-    std::time_t time = std::time(nullptr);
-    char timeString[20];
-    strftime(timeString, sizeof(timeString), "%Y-%m-%d %H:%M:%S",localtime(&time));
-    return timeString;
+    std::time_t now = std::time(nullptr);
+    std::tm tm_buf;
+    localtime_r(&now, &tm_buf);
+
+    std::array<char, 20> timeString;
+    strftime(timeString.data(), timeString.size(), "%Y-%m-%d %H:%M:%S", &tm_buf);
+    return std::string(timeString.data());
 }
 
 void MarsLogger::bindFileOutPutLevelMap(const std::string& levels) {
