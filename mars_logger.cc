@@ -9,7 +9,6 @@ MarsLogger* MarsLogger::getInstance() {
     if (!single_instance) { 
         std::lock_guard<std::mutex> lock(mtx); 
         if (!single_instance) { 
-            std::cout << "logger ready\n";
             single_instance.reset(new MarsLogger()); 
         }
     }
@@ -109,11 +108,11 @@ bool MarsLogger::createFile(const std::string& path, const std::string& fileName
 }
 
 bool MarsLogger::ifFileOutPut (LogLevel file_log_level) {
-    return fileCoutMap[file_log_level] && loggerConfig.logFileSwitch;
+    return loggerConfig.logFileSwitch && fileCoutMap[file_log_level];
 }
 
 bool MarsLogger::ifTerminalOutPut (LogLevel terminal_log_level) {
-    return terminalCoutMap[terminal_log_level] && loggerConfig.logTerminalSwitch;
+    return loggerConfig.logTerminalSwitch && terminalCoutMap[terminal_log_level];
 }
 
 //得到log文件名的时间部分

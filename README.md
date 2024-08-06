@@ -19,8 +19,16 @@ mlog是一个用于C++程序服务的轻量，高性能日志库，可输出六�
 archlinux：(使用yay进行下载)
 
 ```
-$ yay fmt json
+$ yay fmt jsoncpp
 ```
+
+ubuntu:
+
+```
+sudo apt install libfmt-dev libjsoncpp-dev
+```
+
+
 
 其他系统通过相关渠道下载即可
 

@@ -7,5 +7,5 @@
     "logFileName": "test_log",
     "logFilePath": "/home/mars/code/cpp_log/",
     "details": true,
-    "time": true 
+    "time": true
 }
