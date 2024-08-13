@@ -75,7 +75,14 @@ public:
             return;
         }
 
-        std::string log = LogHead(level) + fmt::format(fmt, args...) + LogDetail(file_name, func_name, line_no);
+        std::string log;
+
+        try{
+            log = LogHead(level) + fmt::format(fmt, args...) + LogDetail(file_name, func_name, line_no);
+        } catch (const std::exception& e) {
+            std::cerr << "Error in log format: " << e.what() << '\n';
+            return;
+        }
 
         {
             std::lock_guard<std::mutex> lock(log_mutex); // 加锁以确保线程安全
