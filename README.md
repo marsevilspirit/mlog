@@ -14,44 +14,49 @@ mlog是一个用于C++程序服务的轻量，高性能日志库，可输出六�
 
 #### 依赖
 
-需要c++的fmt库，json库
+需要c++的fmt库
 
 archlinux：(使用yay进行下载)
 
 ```
-$ yay fmt jsoncpp
+$ yay fmt
 ```
 
 ubuntu:
 
 ```
-sudo apt install libfmt-dev libjsoncpp-dev
+sudo apt install libfmt-dev
 ```
 
 
 
 其他系统通过相关渠道下载即可
 
-在本日志库的文件夹中，必须包含`logconf.json`的配置文件
+mlog需要配置相应的环境变量
 
+#### 环境变量配置
 
+Level从F,E,W,I,D,T依次是`Fatal，Error，Warn，Info，Debug，Trace`
 
-#### 配置文件(命名为`logconf.json`)
-
-Level从0到5依次是`Fatal，Error，Warn，Info，Debug，Trace`
-
-```json
-{
-    "logSwitch": true,
-    "logTerminalSwitch": true,
-    "logTerminalLevel": "0,1,2,3,4,5",
-    "logFileSwitch": false, 
-    "logFileLevel": "0,1,2,3,4,5",
-    "logFileName": "test_log",
-    "logFilePath": "/home/mars/code/cpp_log/",
-    "details": false,
-    "time": true
-}
+```
+#日志开关
+export MLOG_SWITCH=TRUE
+#日志终端输出开关
+export MLOG_TERMINAL_SWITCH=TRUE
+#日志终端输出级别设置
+export MLOG_TERMINAL_LEVEL=TDIWEF
+#日志文件输出开关
+export MLOG_FILE_SWITCH=FALSE
+#日志文件输出级别设置
+export MLOG_FILE_LEVEL=TDIWEF
+#日志文件log name
+export MLOG_FILE_NAME=log_name
+#日志文件log path
+export MLOG_FILE_PATH=/path/to/
+#日志文件log details显示开关
+export MLOG_DETAILS=TRUE
+#日志文件log time显示开关
+export MLOG_TIME=TRUE
 ```
 
 
@@ -59,25 +64,25 @@ Level从0到5依次是`Fatal，Error，Warn，Info，Debug，Trace`
 #### 编译命令
 
 ```
-g++ test.cpp mars_logger.cc -ljsoncpp -lstdc++fs -o logger.out -lfmt
+g++ test.cpp mars_logger.cc -o logger.out -lfmt
 ```
 
 
 
 #### 使用方法
 
-无需任何初始化，直接调用即可(你就说方便不方便)
+无需任何初始化，直接调用即可
 
 为了追求极简性，我只写了一个格式化方法，但也绝对够用，可以输出任何类型。
 
 ```c++
-LogTrace("mlog is the NO.{}!", 10000000);
-LogDebug("mlog is {}!", "best");
-LogInfo("mlog is the NO.{}!", 10000000);
-LogWarn("mlog is the NO.{}!", 10000000);
-LogError("mlog is the NO.{}!", 10000000);
-LogFatal("mlog is the NO.{}!", 10000000);
-LogInfo("mlog is the NO.10000000");
+LogTrace("mlog is the NO.{}!", 10000000)
+LogDebug("mlog is {}!", "best")
+LogInfo("mlog is the NO.{}!", 10000000)
+LogWarn("mlog is the NO.{}!", 10000000)
+LogError("mlog is the NO.{}!", 10000000)
+LogFatal("mlog is the NO.{}!", 10000000)
+LogInfo("mlog is the NO.10000000")
 ```
 
 
