@@ -3,18 +3,14 @@
 
 #include <iostream>
 #include <string>
-#include <json/json.h>
 #include <fstream>
 #include <mutex>
 #include <filesystem>
 #include <fmt/core.h>
 #include <unordered_map>
-#include <chrono>
-#include <sstream>
-#include <iomanip>
-#include <regex> // 用于去除 ANSI 代码
+#include <array>
+#include <cstdlib>
 
-#define LOG_CONFIG_PATH "./logconf.json"
 #define RED "\033[31m"
 #define GREEN "\033[32m"
 #define YELLOW "\033[33m"

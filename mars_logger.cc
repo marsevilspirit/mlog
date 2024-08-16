@@ -26,35 +26,22 @@ MarsLogger::~MarsLogger () {
 }
 
 void MarsLogger::initLogConfig () {
-    std::ifstream input(LOG_CONFIG_PATH);
-    if (!input) {
-        std::cerr << "Unable to find the log configuration file, please make sure the file path is correct" << std::endl;
-        return;
-    }
-
-    Json::Reader reader;
-    Json::Value root;
-    if (!reader.parse(input, root, false)) {
-        std::cerr << "parse log config file failed" << std::endl;
-        return;
-    }
-
-    loggerConfig.logSwitch         = root["logSwitch"].asBool();
-    loggerConfig.logTerminalSwitch = root["logTerminalSwitch"].asBool();
-    loggerConfig.logTerminalLevel  = root["logTerminalLevel"].asString();
-    loggerConfig.logFileSwitch     = root["logFileSwitch"].asBool();
-    loggerConfig.logFileLevel      = root["logFileLevel"].asString();
-    loggerConfig.logFileName       = root["logFileName"].asString() + getLogFileNameTime() + ".log";
-    loggerConfig.logFilePath       = root["logFilePath"].asString();
-    loggerConfig.details           = root["details"].asBool();
-    loggerConfig.time              = root["time"].asBool();
+    loggerConfig.logSwitch         = (std::getenv("MLOG_SWITCH") && std::string(std::getenv("MLOG_SWITCH")) == "TRUE") ? true : false;
+    loggerConfig.logTerminalSwitch = (std::getenv("MLOG_TERMINAL_SWITCH") && std::string(std::getenv("MLOG_TERMINAL_SWITCH")) == "TRUE") ? true : false;
+    loggerConfig.logTerminalLevel  = (std::getenv("MLOG_TERMINAL_LEVEL")) ? std::string(std::getenv("MLOG_TERMINAL_LEVEL")) : "";
+    loggerConfig.logFileSwitch     = (std::getenv("MLOG_FILE_SWITCH") && std::string(std::getenv("MLOG_FILE_SWITCH")) == "TRUE") ? true : false;
+    loggerConfig.logFileLevel      = (std::getenv("MLOG_FILE_LEVEL")) ? std::string(std::getenv("MLOG_FILE_LEVEL")) : "";
+    loggerConfig.logFileName       = (std::getenv("MLOG_FILE_NAME") && std::string(std::getenv("MLOG_FILE_NAME")) != "") ? std::string(std::getenv("MLOG_FILE_NAME")) + getLogFileNameTime() + ".log" : "";
+    loggerConfig.logFilePath       = (std::getenv("MLOG_FILE_PATH")) ? std::string(std::getenv("MLOG_FILE_PATH")) : "";
+    loggerConfig.details           = (std::getenv("MLOG_DETAILS") && std::string(std::getenv("MLOG_DETAILS")) == "TRUE") ? true : false;
+    loggerConfig.time              = (std::getenv("MLOG_TIME") && std::string(std::getenv("MLOG_TIME")) == "TRUE") ? true : false;
 
     bindFileOutPutLevelMap(loggerConfig.logFileLevel);
     bindTerminalOutPutLevelMap(loggerConfig.logTerminalLevel);
 
     if (loggerConfig.logSwitch && loggerConfig.logFileSwitch) {
         if (!createFile(loggerConfig.logFilePath, loggerConfig.logFileName)) {
-            std::cout << "Log work path creation failed\n";
+            std::cerr << "Log work path creation failed\n";
         }
     }
 
@@ -137,19 +124,19 @@ std::string MarsLogger::getLogOutPutTime() {
 }
 
 void MarsLogger::bindFileOutPutLevelMap(const std::string& levels) {
-    fileCoutMap[LogLevel::TRACE] = levels.find("5") != std::string::npos;
-    fileCoutMap[LogLevel::DEBUG] = levels.find("4") != std::string::npos;
-    fileCoutMap[LogLevel::INFO]  = levels.find("3") != std::string::npos;
-    fileCoutMap[LogLevel::WARN]  = levels.find("2") != std::string::npos;
-    fileCoutMap[LogLevel::ERROR] = levels.find("1") != std::string::npos;
-    fileCoutMap[LogLevel::FATAL] = levels.find("0") != std::string::npos;
+    fileCoutMap[LogLevel::TRACE] = levels.find("T") != std::string::npos;
+    fileCoutMap[LogLevel::DEBUG] = levels.find("D") != std::string::npos;
+    fileCoutMap[LogLevel::INFO]  = levels.find("I") != std::string::npos;
+    fileCoutMap[LogLevel::WARN]  = levels.find("W") != std::string::npos;
+    fileCoutMap[LogLevel::ERROR] = levels.find("E") != std::string::npos;
+    fileCoutMap[LogLevel::FATAL] = levels.find("F") != std::string::npos;
 }
 
 void MarsLogger::bindTerminalOutPutLevelMap(const std::string& levels) {
-    terminalCoutMap[LogLevel::TRACE] = levels.find("5") != std::string::npos;
-    terminalCoutMap[LogLevel::DEBUG] = levels.find("4") != std::string::npos;
-    terminalCoutMap[LogLevel::INFO]  = levels.find("3") != std::string::npos;
-    terminalCoutMap[LogLevel::WARN]  = levels.find("2") != std::string::npos;
-    terminalCoutMap[LogLevel::ERROR] = levels.find("1") != std::string::npos;
-    terminalCoutMap[LogLevel::FATAL] = levels.find("0") != std::string::npos;
+    terminalCoutMap[LogLevel::TRACE] = levels.find("T") != std::string::npos;
+    terminalCoutMap[LogLevel::DEBUG] = levels.find("D") != std::string::npos;
+    terminalCoutMap[LogLevel::INFO]  = levels.find("I") != std::string::npos;
+    terminalCoutMap[LogLevel::WARN]  = levels.find("W") != std::string::npos;
+    terminalCoutMap[LogLevel::ERROR] = levels.find("E") != std::string::npos;
+    terminalCoutMap[LogLevel::FATAL] = levels.find("F") != std::string::npos;
 }
