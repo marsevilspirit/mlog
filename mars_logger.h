@@ -132,8 +132,8 @@ private:
 
 }
 
-#define LogInfo(fmt, ...)   mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::INFO, fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
-#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::WARN, fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
+#define LogInfo(fmt, ...)   mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::INFO,  fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
+#define LogWarn(fmt, ...)   mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::WARN,  fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
 #define LogError(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::ERROR, fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
 #define LogFatal(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::FATAL, fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__);
 #define LogDebug(fmt, ...)  mars::MarsLogger::getInstance()->_log_impl(mars::LogLevel::DEBUG, fmt, __FILE__, __func__, __LINE__, ##__VA_ARGS__);

@@ -1,4 +1,4 @@
-mlog是一个用于C++程序服务的轻量，高性能日志库，可输出六种日志类型（Fatal，Error，Warn，Info，Debug，Trace），操作简单，支持高自定义输出类型，终端输出，文件输出，用`json`作为配置文件。
+mlog是一个用于C++程序服务的轻量，高性能日志库，可输出六种日志类型（Fatal，Error，Warn，Info，Debug，Trace），操作简单，支持高自定义输出类型，终端输出，文件输出，用环境变量配置。
 
 
 
@@ -19,7 +19,7 @@ mlog是一个用于C++程序服务的轻量，高性能日志库，可输出六�
 archlinux：(使用yay进行下载)
 
 ```
-$ yay fmt
+$ sudo pacman -S fmt
 ```
 
 ubuntu:
