@@ -59,7 +59,7 @@ public:
     }
 
     template <typename ...Args>
-    void _log_impl(LogLevel level, const char* fmt, const char* file_name, const char* func_name, int line_no, Args... args) {
+    void _log_impl(LogLevel level, const char* fmt, const char* file_name, const char* func_name, int line_no, Args&&... args) {
         if (!loggerConfig.logSwitch) {
             return;
         }
@@ -71,20 +71,29 @@ public:
             return;
         }
 
-        std::string log;
+        // 使用线程本地的 ostringstream 来减少内存分配开销
+        thread_local std::ostringstream oss;
+        oss.str("");
+        oss.clear();
 
-        try{
-            log = LogHead(level) + fmt::format(fmt, args...) + LogDetail(file_name, func_name, line_no);
+        try {
+            // 直接构造最终的日志信息，减少中间字符串拼接
+            oss << LogHead(level)
+                << fmt::format(fmt, std::forward<Args>(args)...)
+                << LogDetail(file_name, func_name, line_no);
         } catch (const std::exception& e) {
             std::cerr << "\033[31mError in log format: " << e.what() << " in " << file_name << " at " << func_name << " line " << line_no << "\033[0m\n";
             return;
         }
 
+        std::string log = oss.str(); // 生成最终日志字符串
+
         {
-            std::lock_guard<std::mutex> lock(log_mutex); // 加锁以确保线程安全
+            // 缩小锁的范围，仅在需要访问共享资源时加锁
+            std::lock_guard<std::mutex> lock(log_mutex); 
 
             if (Terminal) {
-                std::cout << colorizeLog(level, log) << '\n'; 
+                std::cout << colorizeLog(level, log) << '\n';
             }
 
             if (File) {
